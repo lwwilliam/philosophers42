@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:28:55 by lwilliam          #+#    #+#             */
-/*   Updated: 2022/12/09 21:22:48 by lwilliam         ###   ########.fr       */
+/*   Updated: 2022/12/20 17:35:10 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-typedef struct s_data	t_data;
-
-typedef struct s_philo
-{
-	int				which_philo;
-	int				left_fork;
-	int				right_fork;
-	int				dead;
-	long long		start_time;
-	t_data			*ptr;
-}	t_philo;
+typedef struct s_philo	t_philo;
 
 typedef struct s_rules
 {
@@ -40,10 +30,20 @@ typedef struct s_rules
 	int				t_sleep;
 	int				num_of_eat;
 	t_philo			*philo;
-	pthread_t		threads;
+}	t_rules;
+
+typedef struct s_philo
+{
+	int				which_philo;
+	int				left_fork;
+	int				right_fork;
+	int				dead;
+	long long		start_time;
+	t_rules			*rules;
+	pthread_t		*threads;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
-}	t_rules;
+}	t_philo;
 
 int			ft_atoi(const char *str);
 int			ft_isdigit(int x);
