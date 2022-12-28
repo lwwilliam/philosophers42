@@ -6,7 +6,7 @@
 #    By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/15 10:16:27 by lwilliam          #+#    #+#              #
-#    Updated: 2022/12/20 14:25:45 by lwilliam         ###   ########.fr        #
+#    Updated: 2022/12/27 11:54:07 by lwilliam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ CFLAGS = -Wall -Wextra -Werror
 all : $(NAME)
 
 $(NAME) : $(SRC)
-	gcc $(CFLAGS) $(SRC) -o $(NAME) #-fsanitize=address
+	gcc $(CFLAGS) $(SRC) -o $(NAME) -lpthread #-fsanitize=address
 
 clean :
 	rm -f *.o

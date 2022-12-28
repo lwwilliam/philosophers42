@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:28:55 by lwilliam          #+#    #+#             */
-/*   Updated: 2022/12/20 17:35:10 by lwilliam         ###   ########.fr       */
+/*   Updated: 2022/12/27 13:32:44 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_rules
 	int				t_eat;
 	int				t_sleep;
 	int				num_of_eat;
+	long long		time;
 	t_philo			*philo;
 }	t_rules;
 
@@ -38,11 +39,12 @@ typedef struct s_philo
 	int				left_fork;
 	int				right_fork;
 	int				dead;
-	long long		start_time;
+	int				eat;
+	long long		last_eat;
 	t_rules			*rules;
 	pthread_t		*threads;
 	pthread_mutex_t	*fork;
-	pthread_mutex_t	print;
+	pthread_mutex_t	*print;
 }	t_philo;
 
 int			ft_atoi(const char *str);

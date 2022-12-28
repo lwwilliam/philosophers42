@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 10:30:59 by lwilliam          #+#    #+#             */
-/*   Updated: 2022/12/20 17:45:35 by lwilliam         ###   ########.fr       */
+/*   Updated: 2022/12/29 02:48:10 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,32 +32,10 @@ void	print_funct(t_philo *philo, char *action, int xphilo)
 {
 	long long	time;
 
-	time = timestamp() - philo->start_time;
+	pthread_mutex_lock(philo->print);
+	time = timestamp() - philo->rules->time;
 	printf("%lld %d %s\n", time, xphilo, action);
-}
-
-void	eating(t_philo *philo, char y_n)
-{
-	int	is_eating;
-	int	is_thinking;
-
-	is_eating = 0;
-	is_thinking = 0;
-	if (y_n == 'y')
-	{
-		print_funct(philo, "is eating", philo->which_philo);
-		is_eating = 1;
-		usleep(1000 * philo->rules->t_eat);
-	}
-	if (is_eating == 0)
-	{
-		print_funct(philo, "is thinking", philo->which_philo);
-		is_thinking = 1;
-	}
-	if (is_thinking == 1)
-	{
-		print_funct(philo, "is sleeping", philo->which_philo);
-	}
+	pthread_mutex_unlock(philo->print);
 }
 
 void	which_fork(t_philo *philo)
@@ -72,25 +50,29 @@ void	which_fork(t_philo *philo)
 void	*funct(void *st)
 {
 	t_philo		*philo;
-	long long	time;
-	long long	last_eat;
 
 	philo = (t_philo *)st;
-	time = timestamp();
-	last_eat = 0;
-	while (dead_check(philo->rules, last_eat, time) != 1)
+	if (philo->which_philo % 2 == 0)
+		usleep (10);
+	philo->last_eat = timestamp();
+	while (1)
 	{
-		time = timestamp();
 		which_fork(philo);
 		pthread_mutex_lock(&(philo->fork[philo->left_fork]));
 		print_funct(philo, "has taken a fork", philo->which_philo);
 		pthread_mutex_lock(&(philo->fork[philo->right_fork]));
 		print_funct(philo, "has taken a fork", philo->which_philo);
-		eating(philo, 'y');
-		last_eat++;
-		printf("test\n");
+		print_funct(philo, "is eating", philo->which_philo);
+		philo->eat++;
+		if (philo->eat == philo->rules->t_eat)
+			philo->rules->t_eat++;
+		philo->last_eat = timestamp();
 		pthread_mutex_unlock(&(philo->fork[philo->left_fork]));
 		pthread_mutex_unlock(&(philo->fork[philo->right_fork]));
+		print_funct(philo, "is sleeping", philo->which_philo);
+		usleep(philo->rules->t_sleep * 1000);
+		print_funct(philo, "is thinking", philo->which_philo);
+		
 	}
 	printf("test\n");
 	return (0);
@@ -105,12 +87,6 @@ int	threading(t_rules *rules, t_philo *philo)
 	printf("%d number of thread will be created\n", rules->num_of_philo);
 	while (x < rules->num_of_philo)
 	{
-		printf("\033[0;33mcreating mutex %d\n\033[0m", x);
-		if (pthread_mutex_init(&(philo->fork[x]), NULL) != 0)
-		{
-			printf("mutex init failed\n");
-			return (1);
-		}
 		printf("\033[0;31mcreating thread %d\033[0m\n", x);
 		philo->which_philo = x;
 		if (pthread_create(&philo->threads[x], NULL, funct, philo))
@@ -119,6 +95,5 @@ int	threading(t_rules *rules, t_philo *philo)
 		x++;
 		usleep(100);
 	}
-	printf("done\n");
 	return (0);
 }
