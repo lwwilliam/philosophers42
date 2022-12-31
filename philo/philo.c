@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:24:29 by lwilliam          #+#    #+#             */
-/*   Updated: 2022/12/29 02:50:20 by lwilliam         ###   ########.fr       */
+/*   Updated: 2022/12/31 15:47:33 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	initfunct(int ac, char **av, t_rules *rules)
 	return (0);
 }
 
-void assign(t_rules *rules, t_philo *philo, pthread_mutex_t *pr)
+void assign(t_rules *rules, t_philo *philo)
 {
 	int	x;
 
@@ -62,8 +62,8 @@ void assign(t_rules *rules, t_philo *philo, pthread_mutex_t *pr)
 	{
 		philo[x].rules = rules;
 		philo[x].eat = 0;
-		philo[x].which_philo = x + 1;
-		philo[x].print = pr;
+		philo[x].which_philo = x;
+		philo[x].last_eat = 0;
 		x++;
 	}
 	rules->time = timestamp();
@@ -72,24 +72,24 @@ void assign(t_rules *rules, t_philo *philo, pthread_mutex_t *pr)
 int	init(t_rules *rules, t_philo *philo)
 {
 	int				x;
-	pthread_mutex_t	pr;
-
 
 	x = 0;
-	if (!philo->fork || !philo)
+	if (!rules->fork || !philo)
 		return (1);
 	while (x < rules->num_of_philo)
 	{
 		printf("\033[0;33mcreating mutex %d\n\033[0m", x);
-		if (pthread_mutex_init(&(philo->fork[x++]), NULL) != 0)
+		if (pthread_mutex_init(&(rules->fork[x++]), NULL) != 0)
 		{
 			printf("mutex init failed\n");
 			return (1);
 		}
 	}
-	if (pthread_mutex_init(&pr, NULL) != 0)
+	if (pthread_mutex_init(&(rules->print), NULL) != 0)
 		return (1);
-	assign(rules, philo, &pr);
+	assign(rules, philo);
+	philo->dead = 0;
+	philo->all_ate = 0;
 	return (0);
 }
 
@@ -99,7 +99,7 @@ void	dest_mutex(t_philo *philo)
 
 	i = 0;
 	while (i < philo->rules->num_of_philo)
-		pthread_mutex_destroy(&philo->fork[i++]);
+		pthread_mutex_destroy(&philo->rules->fork[i++]);
 }
 
 void	end(t_philo *philo, t_rules *rules)
@@ -112,16 +112,16 @@ void	end(t_philo *philo, t_rules *rules)
 		if (philo[i].rules->t_eat == philo[i].rules->num_of_philo)
 		{
 			dest_mutex(philo);
-			// free_param(philo, philo->fork, rules);
+			// free_param(philo, rules->fork, rules);
 			return ;
 		}
 		if (timestamp() - philo[i].last_eat > (long long)rules->t_die)
 		{
 			usleep(100);
-			pthread_mutex_lock(philo->print);
+			pthread_mutex_lock(&(rules->print));
 			printf("%lldms	%d died\n", timestamp() - rules->time, philo->which_philo);
 			dest_mutex(philo);
-			// free_param(philo, philo->fork, rules);
+			// free_param(philo, rules->fork, rules);
 			return ;
 		}
 		i = (i + 1) % rules->num_of_philo;
@@ -147,14 +147,13 @@ time_sleep (num_eat)>\n");
 		return (1);
 	}
 	philo = (t_philo *)malloc(sizeof(t_philo) * (rules->num_of_philo));
-	philo->fork = malloc(sizeof(char) * (rules->num_of_philo));
+	rules->fork = malloc(sizeof(char) * (rules->num_of_philo));
 	if (init(rules, philo) != 0)
 		return (1);
-	philo->threads = (pthread_t *)malloc(sizeof(pthread_t)
-			* (rules->num_of_philo));
+	// philo->threads = (pthread_t *)malloc(sizeof(pthread_t)
+	// 		* (rules->num_of_philo));
 	if (threading(rules, philo) != 0)
 		printf("error\n");
 	end(philo, rules);
-	free(philo->fork);
 	return (0);
 }

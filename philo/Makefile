@@ -6,7 +6,7 @@
 #    By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/15 10:16:27 by lwilliam          #+#    #+#              #
-#    Updated: 2022/12/27 11:54:07 by lwilliam         ###   ########.fr        #
+#    Updated: 2022/12/31 14:56:12 by lwilliam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = philo
 
 SRC = philo.c utils.c thread.c
 
-CFLAGS = -Wall -Wextra -Werror
+# CFLAGS = -Wall -Wextra -Werror
 
 all : $(NAME)
 
