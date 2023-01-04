@@ -6,12 +6,11 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:24:29 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/03 23:41:01 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/04 23:07:11 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"philo.h"
-// https://github.com/ucefooo/philosopher_with_bonus
 
 int	av_check(int ac, char **av, t_rules *rules)
 {
@@ -21,7 +20,7 @@ int	av_check(int ac, char **av, t_rules *rules)
 	count = 1;
 	if (ac != 5 && ac != 6)
 	{
-		printf("Error! <num_of_philo time_die time_eat\
+		printf("Error! <num_of_philo time_die time_eat \
 time_sleep (num_eat)>\n");
 		return (1);
 	}
@@ -55,11 +54,11 @@ int	av_assign(int ac, char **av, t_rules *rules)
 	if (ac == 6)
 	{
 		rules->num_of_eat = ft_atoi(av[5]);
-		if (rules->num_of_eat <= 0)
+		if (rules->num_of_eat <= 1)
 			return (1);
-		else
-			rules->num_of_eat = -1;
 	}
+	else
+			rules->num_of_eat = -1;
 	return (0);
 }
 
@@ -101,7 +100,6 @@ int	mutex(t_rules *rules, t_philo *philo)
 	assign(rules, philo);
 	return (0);
 }
-
 
 int	main(int ac, char **av)
 {
