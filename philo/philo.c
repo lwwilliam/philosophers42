@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:24:29 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/04 23:07:11 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/06 19:03:31 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	av_assign(int ac, char **av, t_rules *rules)
 	return (0);
 }
 
-void assign(t_rules *rules, t_philo *philo)
+void	assign(t_rules *rules, t_philo *philo)
 {
 	int	x;
 
@@ -73,6 +73,8 @@ void assign(t_rules *rules, t_philo *philo)
 		philo[x].last_eat = 0;
 		philo[x].eat = 0;
 		philo[x].which_philo = x;
+		// philo[x].left_fork = x;
+		// philo[x].right_fork = (x + 1) % rules->num_of_philo;
 		x++;
 	}
 }
@@ -86,11 +88,11 @@ int	mutex(t_rules *rules, t_philo *philo)
 		return (1);
 	while (x < rules->num_of_philo)
 	{
-		printf("\033[0;33mcreating mutex %d\n\033[0m", x + 1);
+		// printf("\033[0;33mcreating mutex %d\n\033[0m", x + 1);
 		if (pthread_mutex_init(&(rules->fork[x++]), NULL) != 0)
 		{
 			printf("mutex init failed\n");
-			return (1); 
+			return (1);
 		}
 	}
 	if (pthread_mutex_init(&(rules->print), NULL) != 0)
@@ -120,39 +122,3 @@ int	main(int ac, char **av)
 		printf("error\n");
 	return (0);
 }
-
-// void	dest_mutex(t_philo *philo)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < philo->rules->num_of_philo)
-// 		pthread_mutex_destroy(&philo->rules->fork[i++]);
-// }
-
-// void	end(t_philo *philo, t_rules *rules)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (1)
-// 	{
-// 		if (philo[i].total_eat == philo[i].rules->num_of_philo)
-// 		{
-// 			dest_mutex(philo);
-// 			// free_param(philo, rules->fork, rules);
-// 			return ;
-// 		}
-// 		if (timestamp() - philo[i].last_eat > (long long)rules->t_die)
-// 		{
-// 			usleep(100);
-// 			pthread_mutex_lock(&(rules->print));
-// 			printf("%lldms %d died\n", timestamp() - rules->time, philo->which_philo + 1);
-// 			dest_mutex(philo);
-// 			// free_param(philo, rules->fork, rules);
-// 			return ;
-// 		}
-// 		i = (i + 1) % rules->num_of_philo;
-// 		usleep(500);
-// 	}
-// }

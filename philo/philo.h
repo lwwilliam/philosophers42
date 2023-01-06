@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:28:55 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/04 23:07:38 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/06 15:30:21 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,19 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
+
+typedef struct s_rules	t_rules;
+
+typedef struct s_philo
+{
+	int				which_philo;
+	int				eat;
+	int				left_fork;
+	int				right_fork;
+	long long		last_eat;
+	pthread_t		threads;
+	t_rules			*rules;
+}	t_philo;
 
 typedef struct s_rules
 {
@@ -33,18 +46,8 @@ typedef struct s_rules
 	pthread_mutex_t	meal_check;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
+	t_philo			*philo;
 }	t_rules;
-
-typedef struct s_philo
-{
-	int				which_philo;
-	int				eat;
-	int				left_fork;
-	int				right_fork;
-	long long		last_eat;
-	pthread_t		threads;
-	t_rules			*rules;
-}	t_philo;
 
 int			ft_atoi(const char *str);
 int			ft_isdigit(int x);

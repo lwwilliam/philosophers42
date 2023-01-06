@@ -6,29 +6,21 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 10:30:59 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/04 23:39:15 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/06 19:02:33 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long	timestamp(void)
-{	
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return ((time.tv_usec / 1000) + (time.tv_sec * 1000));
-}
-
-void	print_funct(t_philo *philo, char *action, int xphilo)
+void	print_funct(t_rules *rules, char *action, int xphilo)
 {
 	long long	time;
 
-	pthread_mutex_lock(&(philo->rules->print));
-	time = timestamp() - philo->rules->start_time;
-	if (!(philo->rules->dead))
+	pthread_mutex_lock(&(rules->print));
+	time = timestamp() - rules->start_time;
+	if (!(rules->dead))
 		printf("%lld %d %s\n", time, xphilo + 1, action);
-	pthread_mutex_unlock(&(philo->rules->print));
+	pthread_mutex_unlock(&(rules->print));
 }
 
 void	which_fork(t_philo *philo)
@@ -47,12 +39,12 @@ void	dead_check(t_rules *rules, t_philo *philo)
 	while (!(rules->eaten))
 	{
 		x = 0;
-		while (x < rules->num_of_philo  && !(rules->dead))
+		while (x < rules->num_of_philo && !(rules->dead))
 		{
 			pthread_mutex_lock(&(rules->meal_check));
 			if ((timestamp() - philo[x].last_eat) > rules->t_die)
 			{
-				print_funct(philo, "Died", x);
+				print_funct(rules, "Died", x);
 				rules->dead = 1;
 			}
 			pthread_mutex_unlock(&(rules->meal_check));
@@ -62,7 +54,8 @@ void	dead_check(t_rules *rules, t_philo *philo)
 		if (rules->dead)
 			break ;
 		x = 0;
-		while (rules->num_of_eat != -1 && x < rules->num_of_philo && philo[x].eat >= rules->num_of_eat)
+		while (rules->num_of_eat != -1 && x < rules->num_of_philo
+			&& philo[x].eat >= rules->num_of_eat)
 			x++;
 		if (x == rules->num_of_philo)
 			rules->eaten = 1;
@@ -71,7 +64,7 @@ void	dead_check(t_rules *rules, t_philo *philo)
 
 void	exit_launcher(t_rules *rules, t_philo *philo)
 {
-	int x;
+	int	x;
 
 	x = 0;
 	while (x < rules->num_of_philo)
@@ -91,17 +84,17 @@ void	*funct(void *st)
 	x = 0;
 	philo = (t_philo *)st;
 	rules = philo->rules;
-	if (philo->which_philo % 2 == 0)
+	if (philo->which_philo % 2)
 		usleep (15000);
 	while (!(rules->dead))
 	{
 		which_fork(philo);
 		pthread_mutex_lock(&(rules->fork[philo->left_fork]));
-		print_funct(philo, "has taken a fork", philo->which_philo);
+		print_funct(rules, "has taken a fork", philo->which_philo);
 		pthread_mutex_lock(&(rules->fork[philo->right_fork]));
-		print_funct(philo, "has taken a fork", philo->which_philo);
+		print_funct(rules, "has taken a fork", philo->which_philo);
 		pthread_mutex_lock(&(rules->meal_check));
-		print_funct(philo, "is eating", philo->which_philo);
+		print_funct(rules, "is eating", philo->which_philo);
 		philo->last_eat = timestamp();
 		pthread_mutex_unlock(&(rules->meal_check));
 		usleep(rules->t_eat * 1000);
@@ -110,9 +103,9 @@ void	*funct(void *st)
 		pthread_mutex_unlock(&(rules->fork[philo->right_fork]));
 		if (rules->eaten)
 			break ;
-		print_funct(philo, "is sleeping", philo->which_philo);
+		print_funct(rules, "is sleeping", philo->which_philo);
 		usleep(rules->t_sleep * 1000);
-		print_funct(philo, "is thinking", philo->which_philo);
+		print_funct(rules, "is thinking", philo->which_philo);
 		x++;
 	}
 	return (NULL);
@@ -138,53 +131,3 @@ int	threading(t_rules *rules, t_philo *philo)
 	exit_launcher(rules, philo);
 	return (0);
 }
-
-// void	*funct(void *st)
-// {
-// 	t_philo		*philo;
-// 	t_rules		*rules;
-
-// 	philo = (t_philo *)st;
-// 	rules = philo->rules;
-// 	if (philo->which_philo % 2 == 0)
-// 		usleep (10);
-// 	philo->last_eat = timestamp();
-// 	while (1)
-// 	{
-// 		which_fork(philo);
-// 		pthread_mutex_lock(&(rules->fork[philo->left_fork]));
-// 		print_funct(philo, "has taken a fork", philo->which_philo);
-// 		pthread_mutex_lock(&(rules->fork[philo->right_fork]));
-// 		print_funct(philo, "has taken a fork", philo->which_philo);
-// 		print_funct(philo, "is eating", philo->which_philo);
-// 		philo->eat++;
-// 		if (philo->eat == philo->rules->num_of_eat)
-// 			philo->total_eat++;
-// 		usleep(philo->rules->t_eat * 1000);
-// 		philo->last_eat = timestamp();
-// 		pthread_mutex_unlock(&(rules->fork[philo->left_fork]));
-// 		pthread_mutex_unlock(&(rules->fork[philo->right_fork]));
-// 		print_funct(philo, "is sleeping", philo->which_philo);
-// 		usleep(philo->rules->t_sleep * 1000);
-// 		print_funct(philo, "is thinking", philo->which_philo);
-// 	}
-// 	return (0);
-// }
-
-// long long	time_diff(long long past, long long pres)
-// {
-// 	return (pres - past);
-// }
-
-// void		smart_sleep(long long time, t_rules *rules)
-// {
-// 	long long i;
-
-// 	i = timestamp();
-// 	while (!(rules->dead))
-// 	{
-// 		if (time_diff(i, timestamp()) >= time)
-// 			break ;
-// 		usleep(50);
-// 	}
-// }

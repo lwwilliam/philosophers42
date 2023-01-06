@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/23 12:37:23 by lwilliam          #+#    #+#             */
-/*   Updated: 2022/12/09 13:32:06 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/06 19:02:40 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,12 @@ int	ft_strlen(char *str)
 	while (str[x] != '\0')
 		x++;
 	return (x);
+}
+
+long long	timestamp(void)
+{	
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_usec / 1000) + (time.tv_sec * 1000));
 }
