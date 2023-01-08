@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 10:30:59 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/06 19:02:33 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:09:31 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,19 @@ void	dead_check(t_rules *rules, t_philo *philo)
 	}
 }
 
+void		smart_sleep(long long time, t_rules *rules)
+{
+	long long i;
+
+	i = timestamp();
+	while (!(rules->dead))
+	{
+		if ((timestamp() - i) >= time)
+			break ;
+		usleep(50);
+	}
+}
+
 void	exit_launcher(t_rules *rules, t_philo *philo)
 {
 	int	x;
@@ -88,7 +101,7 @@ void	*funct(void *st)
 		usleep (15000);
 	while (!(rules->dead))
 	{
-		which_fork(philo);
+		// which_fork(philo);
 		pthread_mutex_lock(&(rules->fork[philo->left_fork]));
 		print_funct(rules, "has taken a fork", philo->which_philo);
 		pthread_mutex_lock(&(rules->fork[philo->right_fork]));
@@ -97,14 +110,16 @@ void	*funct(void *st)
 		print_funct(rules, "is eating", philo->which_philo);
 		philo->last_eat = timestamp();
 		pthread_mutex_unlock(&(rules->meal_check));
-		usleep(rules->t_eat * 1000);
+		// usleep(rules->t_eat * 1000);
+		smart_sleep(rules->t_eat, rules);
 		(philo->eat)++;
 		pthread_mutex_unlock(&(rules->fork[philo->left_fork]));
 		pthread_mutex_unlock(&(rules->fork[philo->right_fork]));
 		if (rules->eaten)
 			break ;
 		print_funct(rules, "is sleeping", philo->which_philo);
-		usleep(rules->t_sleep * 1000);
+		// usleep(rules->t_sleep * 1000);
+		smart_sleep(rules->t_sleep, rules);
 		print_funct(rules, "is thinking", philo->which_philo);
 		x++;
 	}

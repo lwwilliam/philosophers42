@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:28:55 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/06 15:30:21 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:12:20 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_rules
 	pthread_mutex_t	meal_check;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
-	t_philo			*philo;
+	t_philo			philo[250];
 }	t_rules;
 
 int			ft_atoi(const char *str);
