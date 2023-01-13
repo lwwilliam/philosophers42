@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:24:29 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/07 00:12:32 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/13 19:09:20 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void	assign(t_rules *rules, t_philo *philo)
 {
 	int	x;
 
-	x = 0;
-	while (x < rules->num_of_philo)
+	x = rules->num_of_philo;
+	while (--x >= 0)
 	{
 		philo[x].rules = rules;
 		philo[x].last_eat = 0;
@@ -75,7 +75,7 @@ void	assign(t_rules *rules, t_philo *philo)
 		philo[x].which_philo = x;
 		philo[x].left_fork = x;
 		philo[x].right_fork = (x + 1) % rules->num_of_philo;
-		x++;
+		// x++;
 	}
 }
 
@@ -83,13 +83,13 @@ int	mutex(t_rules *rules, t_philo *philo)
 {
 	int	x;
 
-	x = 0;
+	x = rules->num_of_philo;
 	if (!rules->fork || !philo)
 		return (1);
-	while (x < rules->num_of_philo)
+	while (--x >= 0)
 	{
-		printf("\033[0;33mcreating mutex %d\n\033[0m", x + 1);
-		if (pthread_mutex_init(&(rules->fork[x++]), NULL) != 0)
+		// printf("\033[0;33mcreating mutex %d\n\033[0m", x + 1);
+		if (pthread_mutex_init(&(rules->fork[x]), NULL) != 0)
 		{
 			printf("mutex init failed\n");
 			return (1);
