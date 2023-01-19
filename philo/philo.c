@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:24:29 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/19 17:38:05 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/19 22:41:15 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,5 @@ int	main(int ac, char **av)
 	free(rules->fork);
 	free(rules->philo);
 	free(rules);
-	system("leaks philo");
 	return (0);
 }

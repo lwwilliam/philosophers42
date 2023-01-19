@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 10:30:59 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/19 17:16:04 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/19 22:47:42 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,14 @@ void	*funct(void *st)
 	if (!(philo->which_philo % 2))
 	{
 		print_funct(rules, "is thinking", philo->which_philo);
-		usleep (15000);
+		usleep(1000);
 	}
 	while (!(rules->dead))
 	{
 		eating(philo);
+		print_funct(rules, "is sleeping", philo->which_philo);
 		if (rules->all_eaten)
 			break ;
-		print_funct(rules, "is sleeping", philo->which_philo);
 		usleep(rules->t_sleep * 1000);
 		print_funct(rules, "is thinking", philo->which_philo);
 		x++;
