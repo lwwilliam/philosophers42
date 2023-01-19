@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:24:29 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/13 19:09:20 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/19 17:38:05 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	av_assign(int ac, char **av, t_rules *rules)
 	rules->t_die = ft_atoi(av[2]);
 	rules->t_eat = ft_atoi(av[3]);
 	rules->t_sleep = ft_atoi(av[4]);
-	rules->eaten = 0;
+	rules->all_eaten = 0;
 	rules->dead = 0;
 	if (rules->num_of_philo <= 0 || rules->t_die <= 0
 		|| rules->t_eat <= 0 || rules->t_sleep <= 0)
@@ -75,7 +75,6 @@ void	assign(t_rules *rules, t_philo *philo)
 		philo[x].which_philo = x;
 		philo[x].left_fork = x;
 		philo[x].right_fork = (x + 1) % rules->num_of_philo;
-		// x++;
 	}
 }
 
@@ -88,7 +87,6 @@ int	mutex(t_rules *rules, t_philo *philo)
 		return (1);
 	while (--x >= 0)
 	{
-		// printf("\033[0;33mcreating mutex %d\n\033[0m", x + 1);
 		if (pthread_mutex_init(&(rules->fork[x]), NULL) != 0)
 		{
 			printf("mutex init failed\n");
@@ -110,14 +108,19 @@ int	main(int ac, char **av)
 	rules = malloc(sizeof(t_rules));
 	if (av_check(ac, av, rules) != 0)
 	{
+		free(rules);
 		printf("Arguments contains error\n");
 		return (1);
 	}
-	// rules->philo = (t_philo *)malloc(sizeof(t_philo) * (rules->num_of_philo));
-	rules->fork = malloc(sizeof(char) * (rules->num_of_philo));
+	rules->fork = malloc(sizeof(char) * (300));
+	rules->philo = malloc(sizeof(char) * (300));
 	if (mutex(rules, rules->philo))
 		return (1);
 	if (threading(rules, rules->philo) != 0)
 		printf("error\n");
+	free(rules->fork);
+	free(rules->philo);
+	free(rules);
+	system("leaks philo");
 	return (0);
 }

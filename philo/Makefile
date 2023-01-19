@@ -6,7 +6,7 @@
 #    By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/15 10:16:27 by lwilliam          #+#    #+#              #
-#    Updated: 2023/01/13 19:08:19 by lwilliam         ###   ########.fr        #
+#    Updated: 2023/01/19 17:23:39 by lwilliam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,10 +16,12 @@ SRC = philo.c utils.c thread.c
 
 CFLAGS = -Wall -Wextra -Werror
 
+OBJS = $(SRC:.c=.o)
+
 all : $(NAME)
 
-$(NAME) : $(SRC)
-	gcc $(CFLAGS) $(SRC) -o $(NAME) -lpthread -fsanitize=thread
+$(NAME) : $(OBJS)
+	gcc $(CFLAGS) -o $(NAME) $(OBJS) -lpthread
 
 clean :
 	rm -f *.o

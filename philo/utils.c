@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/23 12:37:23 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/06 19:02:40 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/19 16:40:01 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,15 @@ long long	timestamp(void)
 
 	gettimeofday(&time, NULL);
 	return ((time.tv_usec / 1000) + (time.tv_sec * 1000));
+}
+
+void	print_funct(t_rules *rules, char *action, int xphilo)
+{
+	long long	time;
+
+	pthread_mutex_lock(&(rules->print));
+	time = timestamp() - rules->start_time;
+	if (!(rules->dead))
+		printf("%lld %d %s\n", time, xphilo + 1, action);
+	pthread_mutex_unlock(&(rules->print));
 }
