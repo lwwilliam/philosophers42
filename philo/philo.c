@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:24:29 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/19 22:41:15 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/20 14:09:33 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	av_check(int ac, char **av, t_rules *rules)
 	if (ac != 5 && ac != 6)
 	{
 		printf("Error! <num_of_philo time_die time_eat \
-time_sleep (num_eat)>\n");
+time_sleep (n_eat)>\n");
 		return (1);
 	}
 	while (count < ac)
@@ -53,12 +53,12 @@ int	av_assign(int ac, char **av, t_rules *rules)
 		return (1);
 	if (ac == 6)
 	{
-		rules->num_of_eat = ft_atoi(av[5]);
-		if (rules->num_of_eat <= 1)
+		rules->n_eat = ft_atoi(av[5]);
+		if (rules->n_eat < 1)
 			return (1);
 	}
 	else
-			rules->num_of_eat = -1;
+			rules->n_eat = -1;
 	return (0);
 }
 
@@ -112,8 +112,8 @@ int	main(int ac, char **av)
 		printf("Arguments contains error\n");
 		return (1);
 	}
-	rules->fork = malloc(sizeof(char) * (300));
-	rules->philo = malloc(sizeof(char) * (300));
+	rules->fork = malloc(sizeof(pthread_mutex_t) * (300));
+	rules->philo = malloc(sizeof(t_philo) * (300));
 	if (mutex(rules, rules->philo))
 		return (1);
 	if (threading(rules, rules->philo) != 0)

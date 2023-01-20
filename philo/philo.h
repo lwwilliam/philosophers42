@@ -6,7 +6,7 @@
 /*   By: lwilliam <lwilliam@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 10:28:55 by lwilliam          #+#    #+#             */
-/*   Updated: 2023/01/19 16:47:52 by lwilliam         ###   ########.fr       */
+/*   Updated: 2023/01/20 14:32:03 by lwilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_rules
 	int				t_die;
 	int				t_eat;
 	int				t_sleep;
-	int				num_of_eat;
+	int				n_eat;
 	int				dead;
 	int				all_eaten;
 	long long		start_time;	
@@ -55,9 +55,9 @@ int			ft_strlen(char *str);
 long long	timestamp(void);
 void		print_funct(t_rules *rules, char *action, int xphilo);
 
-
 int			av_check(int ac, char **av, t_rules *rules);
 int			threading(t_rules *rules, t_philo *philo);
 int			av_assign(int ac, char **av, t_rules *rules);
+void		destroy(t_rules *rules, t_philo *philo);
 
 #endif
